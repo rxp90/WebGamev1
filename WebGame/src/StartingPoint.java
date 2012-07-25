@@ -5,13 +5,16 @@ import java.awt.Image;
 
 public class StartingPoint extends Applet implements Runnable {
 
-	private int x = 0;
-	private int y = 0;
-	private int dx = 2;
-	private int dy = 1;
+	private int x = 400;
+	private int y = 25;
+	private double dx = 20;
+	private double dy = 0;
 	private int radius = 20;
 	private Image image;
 	private Graphics doubleG;
+	private double gravity = 15;
+	private double energyLoss = .65;
+	private double dt = .2;
 
 	@Override
 	public void init() {
@@ -54,21 +57,22 @@ public class StartingPoint extends Applet implements Runnable {
 			} else {
 				x += dx;
 			}
-			if (y + dy > this.getHeight() - radius - 1) {
-				y = this.getHeight() - radius - 1; // -1 porque empieza en 0
-				dy = -dy;
-			} else if (y + dy < 0 + radius) {
-				y = 0 + radius;
+
+			if (y > this.getHeight() - radius - 1) {
+				y = this.getHeight() - radius - 1;
+				dy *= energyLoss;
 				dy = -dy;
 			} else {
-				y += dy;
+				// Velocidad (cinemática)
+				dy += gravity * dt;
+				// Posición (cinemática)
+				y += dy * dt + .5 * gravity * dt * dt;
 			}
 			repaint();
-			// 1000 milisegundos / 60FPS = 16.666 ms
 			try {
-				Thread.sleep(17);
+				Thread.sleep(17); // 1000 milisegundos / 60FPS = 16.666 ms
+
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
