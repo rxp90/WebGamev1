@@ -1,6 +1,5 @@
 import java.awt.Color;
 import java.awt.Graphics;
-import java.util.logging.Logger;
 
 public class Ball {
 	/**
@@ -49,8 +48,21 @@ public class Ball {
 		} else {
 			x += dx;
 		}
-
-		// Si está en el suelo.
+		
+		if (y > sp.getHeight() - radius - 1) { // Si la 'y' sobrepasa el suelo,
+												// la pelota rebotará contra él.
+			y = sp.getHeight() - radius - 1;
+			// dy *= energyLoss;
+			// dy = -dy;
+			dy = gameDy;
+		} else {
+			// Velocidad (ley dinámica)
+			dy += gravity * dt;
+			// Posición (ley dinámica)
+			y += dy * dt + .5 * gravity * dt * dt;
+		}
+		
+		// Si está en el suelo la velocidad del eje x sufrirá una fricción.
 		if (y == sp.getHeight() - radius - 1) {
 			dx *= xFriction;
 			// Para detener el movimiento "residual" por el suelo.
@@ -62,17 +74,6 @@ public class Ball {
 			}
 		}
 
-		if (y > sp.getHeight() - radius - 1) { // Si la 'y' sobrepasa el suelo
-			y = sp.getHeight() - radius - 1;
-			//dy *= energyLoss;
-			//dy = -dy;
-			dy = gameDy;
-		} else {
-			// Velocidad (dinámica)
-			dy += gravity * dt;
-			// Posición (dinámica)
-			y += dy * dt + .5 * gravity * dt * dt;
-		}
 	}
 
 	public void moveRight() {
