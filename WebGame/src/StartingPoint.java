@@ -15,6 +15,7 @@ public class StartingPoint extends Applet implements Runnable {
 	private double gravity = 15;
 	private double energyLoss = .65;
 	private double dt = .2;
+	private double xFriction = .9;
 
 	@Override
 	public void init() {
@@ -56,6 +57,15 @@ public class StartingPoint extends Applet implements Runnable {
 				dx = -dx;
 			} else {
 				x += dx;
+			}
+
+			// Si está en el suelo.
+			if (y == this.getHeight() - radius - 1) {
+				dx *= xFriction;
+				// Para detener el movimiento "residual" por el suelo.
+				if (Math.abs(dx) < .8) {
+					dx = 0;
+				}
 			}
 
 			if (y > this.getHeight() - radius - 1) {
