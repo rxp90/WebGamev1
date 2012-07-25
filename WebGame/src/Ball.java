@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.logging.Logger;
 
 public class Ball {
 	/**
@@ -21,9 +22,14 @@ public class Ball {
 	 * Variables para añadir realismo.
 	 */
 	private double gravity = 15;
-	private double energyLoss = .9;
+	private double energyLoss = .65;
 	private double dt = .2;
 	private double xFriction = .9;
+
+	/**
+	 * Variables del juego.
+	 */
+	private double gameDy = -75;
 
 	public Ball() {
 	}
@@ -50,6 +56,9 @@ public class Ball {
 			// Para detener el movimiento "residual" por el suelo.
 			if (Math.abs(dx) < .8) {
 				dx = 0;
+			}
+			System.out.println(dy);
+			if (Math.abs(dy) < 3) {
 				dy = 0;
 			}
 		}
@@ -84,7 +93,7 @@ public class Ball {
 	}
 
 	// Getters and Setters.
-	
+
 	public int getRadius() {
 		return radius;
 	}
@@ -164,6 +173,13 @@ public class Ball {
 	public void setxFriction(double xFriction) {
 		this.xFriction = xFriction;
 	}
-	
-	
+
+	public double getGameDy() {
+		return gameDy;
+	}
+
+	public void setGameDy(double gameDy) {
+		this.gameDy = gameDy;
+	}
+
 }

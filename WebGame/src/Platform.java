@@ -33,8 +33,9 @@ public class Platform {
 
 		if (ballY + radius > y && ballY + radius < y + height) {
 			if (ballX > x && ballX < x + width) {
-				double newDY = b.getDy() * -1;// Cambio la dirección del
-												// movimiento.
+				// double newDY = b.getDy() * -1;// Cambio la dirección del
+				// movimiento.
+				double newDY = b.getGameDy(); // Uso la velocidad del juego.
 				b.setY(y - radius); // Coloco la bola sobre la plataforma. De
 									// no hacer esto, acabaría
 									// atravesándola.
