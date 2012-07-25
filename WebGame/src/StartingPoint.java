@@ -12,6 +12,7 @@ public class StartingPoint extends Applet implements Runnable {
 
 	@Override
 	public void init() {
+		setSize(800,600);
 	}
 
 	@Override
