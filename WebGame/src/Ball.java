@@ -82,4 +82,88 @@ public class Ball {
 		g.setColor(Color.GREEN);
 		g.fillOval(x - radius, y - radius, radius * 2, radius * 2);
 	}
+
+	// Getters and Setters.
+	
+	public int getRadius() {
+		return radius;
+	}
+
+	public void setRadius(int radius) {
+		this.radius = radius;
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
+
+	public double getDx() {
+		return dx;
+	}
+
+	public void setDx(double dx) {
+		this.dx = dx;
+	}
+
+	public double getDy() {
+		return dy;
+	}
+
+	public void setDy(double dy) {
+		this.dy = dy;
+	}
+
+	public double getMaxSpeed() {
+		return maxSpeed;
+	}
+
+	public void setMaxSpeed(double maxSpeed) {
+		this.maxSpeed = maxSpeed;
+	}
+
+	public double getGravity() {
+		return gravity;
+	}
+
+	public void setGravity(double gravity) {
+		this.gravity = gravity;
+	}
+
+	public double getEnergyLoss() {
+		return energyLoss;
+	}
+
+	public void setEnergyLoss(double energyLoss) {
+		this.energyLoss = energyLoss;
+	}
+
+	public double getDt() {
+		return dt;
+	}
+
+	public void setDt(double dt) {
+		this.dt = dt;
+	}
+
+	public double getxFriction() {
+		return xFriction;
+	}
+
+	public void setxFriction(double xFriction) {
+		this.xFriction = xFriction;
+	}
+	
+	
 }
