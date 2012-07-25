@@ -8,7 +8,8 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 
 	private Image image;
 	private Graphics doubleG;
-	Ball b,b2;
+	private Ball b, b2;
+	private Platform p;
 
 	@Override
 	public void init() {
@@ -19,7 +20,8 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 	@Override
 	public void start() {
 		b = new Ball();
-		b2 = new Ball(250,250);
+		b2 = new Ball(250, 250);
+		p = new Platform();
 		Thread thread = new Thread(this);
 		thread.start();
 	}
@@ -47,6 +49,7 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 		while (true) {
 			b.update(this);
 			b2.update(this);
+			p.update(this);
 			repaint();
 			try {
 				Thread.sleep(17); // 1000 milisegundos / 60FPS = 16.666 ms
@@ -61,11 +64,12 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 	public void paint(Graphics g) {
 		b.paint(g);
 		b2.paint(g);
+		p.paint(g);
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		switch(e.getKeyCode()){
+		switch (e.getKeyCode()) {
 		case KeyEvent.VK_LEFT:
 			b.moveLeft();
 			break;
@@ -77,12 +81,12 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		
+
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		
+
 	}
 
 }
