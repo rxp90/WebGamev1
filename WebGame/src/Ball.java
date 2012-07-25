@@ -21,7 +21,7 @@ public class Ball {
 	 * Variables para añadir realismo.
 	 */
 	private double gravity = 15;
-	private double energyLoss = .65;
+	private double energyLoss = .9;
 	private double dt = .2;
 	private double xFriction = .9;
 
@@ -59,9 +59,9 @@ public class Ball {
 			dy *= energyLoss;
 			dy = -dy;
 		} else {
-			// Velocidad (cinemática)
+			// Velocidad (dinámica)
 			dy += gravity * dt;
-			// Posición (cinemática)
+			// Posición (dinámica)
 			y += dy * dt + .5 * gravity * dt * dt;
 		}
 	}

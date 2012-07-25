@@ -8,8 +8,8 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 
 	private Image image;
 	private Graphics doubleG;
-	private Ball b, b2;
-	private Platform p;
+	private Ball b;
+	private Platform p, p2;
 
 	@Override
 	public void init() {
@@ -20,8 +20,8 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 	@Override
 	public void start() {
 		b = new Ball();
-		b2 = new Ball(250, 250);
 		p = new Platform();
+		p2 = new Platform(100, 445);
 		Thread thread = new Thread(this);
 		thread.start();
 	}
@@ -48,8 +48,8 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 		// TODO Auto-generated method stub
 		while (true) {
 			b.update(this);
-			b2.update(this);
-			p.update(this);
+			p.update(this, b);
+			p2.update(this, b);
 			repaint();
 			try {
 				Thread.sleep(17); // 1000 milisegundos / 60FPS = 16.666 ms
@@ -63,8 +63,8 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 	@Override
 	public void paint(Graphics g) {
 		b.paint(g);
-		b2.paint(g);
 		p.paint(g);
+		p2.paint(g);
 	}
 
 	@Override
