@@ -65,6 +65,7 @@ public class StartingPoint extends Applet implements Runnable {
 				// Para detener el movimiento "residual" por el suelo.
 				if (Math.abs(dx) < .8) {
 					dx = 0;
+					dy = 0;
 				}
 			}
 
