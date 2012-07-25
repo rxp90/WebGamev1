@@ -13,7 +13,7 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 	private Graphics doubleG;
 	private Ball b;
 	private Platform p[] = new Platform[7];
-	private Item items[] = new Item[3];
+	private Item items[] = new Item[10];
 
 	@Override
 	public void init() {
@@ -31,13 +31,19 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 		}
 
 		for (int i = 0; i < items.length; i++) {
-			items[i] = new GravUp(getWidth() + 2000 * i);
+			items[i] = new Item(getWidth() + 2000 * i);
 		}
 
 		Thread thread = new Thread(this);
 		thread.start();
 	}
 
+	/*
+	 * Redefinimos el método 'update' para que no borre el objeto en pantalla y
+	 * evitar el parpadeo. (non-Javadoc)
+	 * 
+	 * @see java.awt.Container#update(java.awt.Graphics)
+	 */
 	@Override
 	public void update(Graphics g) {
 		// Double buffering.
@@ -57,15 +63,8 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
+
 		while (true) {
-			
-			for (int i = 0; i < items.length; i++) {
-				if (items[i].getY() == this.getHeight() + 100) {
-					items[i] = null;
-					items[i] = new GravUp(getWidth());
-				}
-			}
 			b.update(this);
 			for (int i = 0; i < p.length; i++) {
 				p[i].update(this, b);
@@ -76,7 +75,6 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 			repaint();
 			try {
 				Thread.sleep(17); // 1000 milisegundos / 60FPS = 16.666 ms
-
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

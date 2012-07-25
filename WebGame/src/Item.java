@@ -3,10 +3,38 @@ import java.awt.Graphics;
 import java.util.Random;
 
 public class Item {
-
-	private int x, y, dx, radius;
+	/**
+	 * Radio de la bola y coordenadas de posición.
+	 */
+	private int x, y, radius;
+	/**
+	 * Applet.
+	 */
 	private StartingPoint sp;
+	/**
+	 * Velocidades.
+	 */
+	private double dx = 10;
+	private double dy = 0;
+	private double maxSpeed = 20;
+	/**
+	 * Variables para añadir realismo.
+	 */
+	private double gravity = 15;
+	private double energyLoss = .65;
+	private double dt = .2;
+	private double xFriction = .9;
+	/**
+	 * Variable para saber si la bola debe caer o no.
+	 */
+	private boolean fallToFloor = false;
 
+	/**
+	 * Crea un objeto especificando su coordenada x.
+	 * 
+	 * @param x
+	 *            coordenada x.
+	 */
 	public Item(int x) {
 		this.x = x;
 		Random r = new Random();
@@ -15,11 +43,25 @@ public class Item {
 		dx = -2;
 	}
 
+	/**
+	 * Actualiza el estado de los objetos.
+	 * 
+	 * @param sp
+	 *            applet.
+	 * @param b
+	 *            objeto Ball del usuario.
+	 */
 	public void update(StartingPoint sp, Ball b) {
-		x += dx; // Las plataformas se moverán a la derecha.
-		this.sp = sp;
-		
-		checkForCollision(b);
+
+		if (this.sp == null) {
+			this.sp = sp;
+		}
+		if (!fallToFloor) {
+			x += dx; // Las plataformas se moverán a la derecha.
+			checkForCollision(b);
+		} else {
+			fallToFloor();
+		}
 
 		// Si el objeto desaparece por la izquierda lo colocaremos de nuevo
 		// por la derecha de forma aleatoria.
@@ -29,6 +71,12 @@ public class Item {
 		}
 	}
 
+	/**
+	 * Comprueba si la bola ha colisionado o no con el objeto.
+	 * 
+	 * @param ball
+	 *            objeto Ball del usuario.
+	 */
 	private void checkForCollision(Ball ball) {
 		// Colisión mejorada con teorema de Pitágoras.
 		int ballX = ball.getX();
@@ -44,21 +92,73 @@ public class Item {
 		// Distancia entre centros de los objetos.
 		double c = Math.sqrt((double) (a * a) + (double) (b * b));
 
+		// Si colisionan llevamos a cabo una acción.
 		if (c < collide) {
-			performAction(ball);
-			x = 0;
-			y = sp.getHeight() + 100;
+			performAction();
 		}
 	}
 
-	public void performAction(Ball ball) {
+	/**
+	 * Acción que se llevará a cabo si hay colisión.
+	 * 
+	 */
+	public void performAction() {
+		fallToFloor = true;
+	}
+
+	/**
+	 * Hace que el objeto caiga al suelo.
+	 */
+	public void fallToFloor() {
+		if (x + dx > sp.getWidth() - radius - 1) {
+			x = sp.getWidth() - radius - 1; // -1 porque empieza en 0
+			dx = -dx;
+		} else if (x + dx < 0 + radius) {
+			x = 0 + radius;
+			dx = -dx;
+		} else {
+			x += dx;
+		}
+
+		// Si está en el suelo la velocidad del eje x sufrirá una fricción.
+		if (y == sp.getHeight() - radius - 1) {
+			dx *= xFriction;
+			// Para detener el movimiento "residual" por el suelo.
+			if (Math.abs(dx) < .8) {
+				dx = 0;
+				dy = 0;
+			}
+		}
+
+		if (y > sp.getHeight() - radius - 1) { // Si la 'y' sobrepasa el
+												// suelo,
+												// la pelota rebotará contra
+												// él.
+			y = sp.getHeight() - radius - 1;
+			dy *= energyLoss;
+			dy = -dy;
+
+		} else {
+			// Velocidad (ley dinámica)
+			dy += gravity * dt;
+			// Posición (ley dinámica)
+			y += dy * dt + .5 * gravity * dt * dt;
+		}
 
 	}
 
+	/**
+	 * Pinta el objeto.
+	 * 
+	 * @param g
+	 *            Graphics sobre el que se dibujará.
+	 */
 	public void paint(Graphics g) {
 		g.setColor(Color.ORANGE);
 		g.fillOval(x - radius, y - radius, radius * 2, radius * 2);
 	}
+
+	// Getters and setters
 
 	public int getX() {
 		return x;
@@ -76,14 +176,6 @@ public class Item {
 		this.y = y;
 	}
 
-	public int getDx() {
-		return dx;
-	}
-
-	public void setDx(int dx) {
-		this.dx = dx;
-	}
-
 	public int getRadius() {
 		return radius;
 	}
@@ -91,8 +183,61 @@ public class Item {
 	public void setRadius(int radius) {
 		this.radius = radius;
 	}
-	
-	// Getters and setters
-	
-	
+
+	public double getDx() {
+		return dx;
+	}
+
+	public void setDx(double dx) {
+		this.dx = dx;
+	}
+
+	public double getDy() {
+		return dy;
+	}
+
+	public void setDy(double dy) {
+		this.dy = dy;
+	}
+
+	public double getMaxSpeed() {
+		return maxSpeed;
+	}
+
+	public void setMaxSpeed(double maxSpeed) {
+		this.maxSpeed = maxSpeed;
+	}
+
+	public double getGravity() {
+		return gravity;
+	}
+
+	public void setGravity(double gravity) {
+		this.gravity = gravity;
+	}
+
+	public double getEnergyLoss() {
+		return energyLoss;
+	}
+
+	public void setEnergyLoss(double energyLoss) {
+		this.energyLoss = energyLoss;
+	}
+
+	public double getDt() {
+		return dt;
+	}
+
+	public void setDt(double dt) {
+		this.dt = dt;
+	}
+
+	public double getxFriction() {
+		return xFriction;
+	}
+
+	public void setxFriction(double xFriction) {
+		this.xFriction = xFriction;
+	}
+
 }

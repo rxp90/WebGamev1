@@ -30,25 +30,43 @@ public class Ball {
 	 */
 	private double gameDy = -75;
 
+	/**
+	 * Constructor por defecto.
+	 */
 	public Ball() {
 	}
 
-	public Ball(int i, int j) {
-		this.x = i;
-		this.y = j;
+	/**
+	 * Constructor con coordenadas.
+	 * 
+	 * @param x
+	 *            coordenada x.
+	 * @param y
+	 *            coordenada y.
+	 */
+	public Ball(int x, int y) {
+		this.x = x;
+		this.y = y;
 	}
 
+	/**
+	 * Actualiza el estado del objeto.
+	 * 
+	 * @param sp
+	 *            applet.
+	 */
 	public void update(StartingPoint sp) {
-		if (x + dx > sp.getWidth() - radius - 1) {
+
+		if (x + dx > sp.getWidth() - radius - 1) { // Rebote con lado derecho.
 			x = sp.getWidth() - radius - 1; // -1 porque empieza en 0
 			dx = -dx;
-		} else if (x + dx < 0 + radius) {
+		} else if (x + dx < 0 + radius) {// Rebote con lado izquierdo
 			x = 0 + radius;
 			dx = -dx;
 		} else {
 			x += dx;
 		}
-		
+
 		if (y > sp.getHeight() - radius - 1) { // Si la 'y' sobrepasa el suelo,
 												// la pelota rebotará contra él.
 			y = sp.getHeight() - radius - 1;
@@ -61,7 +79,7 @@ public class Ball {
 			// Posición (ley dinámica)
 			y += dy * dt + .5 * gravity * dt * dt;
 		}
-		
+
 		// Si está en el suelo la velocidad del eje x sufrirá una fricción.
 		if (y == sp.getHeight() - radius - 1) {
 			dx *= xFriction;
@@ -76,18 +94,30 @@ public class Ball {
 
 	}
 
+	/**
+	 * Aumenta la velocidad hacia la derecha.
+	 */
 	public void moveRight() {
 		if (dx + 1 < maxSpeed) {
 			dx += 1;
 		}
 	}
 
+	/**
+	 * Aumenta la velocidad hacia la izquierda.
+	 */
 	public void moveLeft() {
 		if (dx - 1 > -maxSpeed) {
 			dx -= 1;
 		}
 	}
 
+	/**
+	 * Pinta el objeto.
+	 * 
+	 * @param g
+	 *            Graphics sobre el que se dibujará.
+	 */
 	public void paint(Graphics g) {
 		g.setColor(Color.GREEN);
 		g.fillOval(x - radius, y - radius, radius * 2, radius * 2);

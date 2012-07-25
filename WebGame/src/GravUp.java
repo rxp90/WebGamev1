@@ -7,10 +7,6 @@ public class GravUp extends Item {
 		super(x);
 	}
 
-	@Override
-	public void performAction(Ball ball) {
-		ball.setGravity(ball.getGravity() + 3);
-	}
 
 	@Override
 	public void paint(Graphics g) {
