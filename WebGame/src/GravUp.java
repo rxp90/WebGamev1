@@ -8,8 +8,14 @@ public class GravUp extends Item {
 	}
 
 	@Override
+	public void performAction(Ball ball) {
+		ball.setGravity(ball.getGravity() + 3);
+	}
+
+	@Override
 	public void paint(Graphics g) {
 		g.setColor(Color.RED);
 		super.paint(g);
 	}
+
 }

@@ -31,7 +31,6 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 		}
 
 		for (int i = 0; i < items.length; i++) {
-			Random r = new Random();
 			items[i] = new GravUp(getWidth() + 2000 * i);
 		}
 
@@ -60,6 +59,13 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 	public void run() {
 		// TODO Auto-generated method stub
 		while (true) {
+			
+			for (int i = 0; i < items.length; i++) {
+				if (items[i].getY() == this.getHeight() + 100) {
+					items[i] = null;
+					items[i] = new GravUp(getWidth());
+				}
+			}
 			b.update(this);
 			for (int i = 0; i < p.length; i++) {
 				p[i].update(this, b);
