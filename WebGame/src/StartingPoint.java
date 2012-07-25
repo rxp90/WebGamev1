@@ -32,7 +32,7 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 
 		for (int i = 0; i < items.length; i++) {
 			Random r = new Random();
-			items[i] = new Item(getWidth() + 2000 * i);
+			items[i] = new GravUp(getWidth() + 2000 * i);
 		}
 
 		Thread thread = new Thread(this);

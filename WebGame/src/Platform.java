@@ -31,6 +31,7 @@ public class Platform {
 		// por la derecha de forma aleatoria.
 		if (x < 0 - width) {
 			Random r = new Random();
+			y = sp.getHeight() - 40 - r.nextInt(400);
 			x = sp.getWidth() + r.nextInt(300);
 		}
 	}
