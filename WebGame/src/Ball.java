@@ -2,11 +2,24 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 public class Ball {
+	/**
+	 * Radio de la bola.
+	 */
 	private int radius = 20;
+	/**
+	 * Coordenadas de posición.
+	 */
 	private int x = 400;
 	private int y = 25;
-	private double dx = 20;
+	/**
+	 * Velocidades.
+	 */
+	private double dx = 10;
 	private double dy = 0;
+	private double maxSpeed = 20;
+	/**
+	 * Variables para añadir realismo.
+	 */
 	private double gravity = 15;
 	private double energyLoss = .65;
 	private double dt = .2;
@@ -14,7 +27,7 @@ public class Ball {
 
 	public Ball() {
 	}
-	
+
 	public Ball(int i, int j) {
 		this.x = i;
 		this.y = j;
@@ -50,6 +63,18 @@ public class Ball {
 			dy += gravity * dt;
 			// Posición (cinemática)
 			y += dy * dt + .5 * gravity * dt * dt;
+		}
+	}
+
+	public void moveRight() {
+		if (dx + 1 < maxSpeed) {
+			dx += 1;
+		}
+	}
+
+	public void moveLeft() {
+		if (dx - 1 > -maxSpeed) {
+			dx -= 1;
 		}
 	}
 
