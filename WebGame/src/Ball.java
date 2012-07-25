@@ -57,16 +57,16 @@ public class Ball {
 			if (Math.abs(dx) < .8) {
 				dx = 0;
 			}
-			System.out.println(dy);
 			if (Math.abs(dy) < 3) {
 				dy = 0;
 			}
 		}
 
-		if (y > sp.getHeight() - radius - 1) {
+		if (y > sp.getHeight() - radius - 1) { // Si la 'y' sobrepasa el suelo
 			y = sp.getHeight() - radius - 1;
-			dy *= energyLoss;
-			dy = -dy;
+			//dy *= energyLoss;
+			//dy = -dy;
+			dy = gameDy;
 		} else {
 			// Velocidad (dinámica)
 			dy += gravity * dt;
