@@ -13,6 +13,7 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 	private Graphics doubleG;
 	private Ball b;
 	private Platform p[] = new Platform[7];
+	private Item items[] = new Item[3];
 
 	@Override
 	public void init() {
@@ -28,6 +29,12 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 			p[i] = new Platform(getWidth() + 200 * i, getHeight() - 40
 					- r.nextInt(400));
 		}
+
+		for (int i = 0; i < items.length; i++) {
+			Random r = new Random();
+			items[i] = new Item(getWidth() + 2000 * i);
+		}
+
 		Thread thread = new Thread(this);
 		thread.start();
 	}
@@ -57,6 +64,9 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 			for (int i = 0; i < p.length; i++) {
 				p[i].update(this, b);
 			}
+			for (int i = 0; i < items.length; i++) {
+				items[i].update(this, b);
+			}
 			repaint();
 			try {
 				Thread.sleep(17); // 1000 milisegundos / 60FPS = 16.666 ms
@@ -72,6 +82,9 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 		b.paint(g);
 		for (int i = 0; i < p.length; i++) {
 			p[i].paint(g);
+		}
+		for (int i = 0; i < items.length; i++) {
+			items[i].paint(g);
 		}
 	}
 
