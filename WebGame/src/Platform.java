@@ -3,10 +3,18 @@ import java.awt.Graphics;
 import java.util.Random;
 
 public class Platform {
-
+	/**
+	 * Velocidad de desplazamiento.
+	 */
 	private int dx;
+	/**
+	 * Coordenadas de posición, ancho y alto.
+	 */
 	private int x, y, width, height;
 
+	/**
+	 * Constructor por defecto.
+	 */
 	public Platform() {
 		dx = -1;
 		x = 300;
@@ -15,6 +23,14 @@ public class Platform {
 		height = 40;
 	}
 
+	/**
+	 * Constructor con dos coordenadas.
+	 * 
+	 * @param x
+	 *            coordenada x.
+	 * @param y
+	 *            coordenada y.
+	 */
 	public Platform(int x, int y) {
 		this.x = x;
 		this.y = y;
@@ -23,19 +39,35 @@ public class Platform {
 		dx = -1;
 	}
 
+	/**
+	 * Actualiza el estado del objeto.
+	 * 
+	 * @param sp
+	 *            applet.
+	 * @param b
+	 *            objeto Ball del usuario.
+	 */
 	public void update(StartingPoint sp, Ball b) {
-		x += dx; // Las plataformas se moverán a la derecha.
+
+		x += dx; // Las plataformas se moverán a la izquierda.
+
 		checkForCollision(b);
 
 		// Si la plataforma desaparece por la izquierda la colocaremos de nuevo
 		// por la derecha de forma aleatoria.
 		if (x < 0 - width) {
 			Random r = new Random();
-			y = sp.getHeight() - 40 - r.nextInt(400);
+			y = sp.getHeight() - height - r.nextInt(400);
 			x = sp.getWidth() + r.nextInt(300);
 		}
 	}
 
+	/**
+	 * Comprueba si la bola ha colisionado con la plataforma.
+	 * 
+	 * @param b
+	 *            objeto Ball del usuario.
+	 */
 	private void checkForCollision(Ball b) {
 		int ballX = b.getX();
 		int ballY = b.getY();

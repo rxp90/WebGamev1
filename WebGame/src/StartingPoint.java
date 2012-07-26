@@ -38,6 +38,28 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 		thread.start();
 	}
 
+	@Override
+	public void run() {
+		// Actualiza el estado de todos los objeto y los pinta.
+		while (true) {
+			b.update(this);
+			for (int i = 0; i < p.length; i++) {
+				p[i].update(this, b);
+			}
+			for (int i = 0; i < items.length; i++) {
+				items[i].update(this, b);
+			}
+
+			repaint();
+
+			try {
+				Thread.sleep(17); // 1000 milisegundos / 60FPS = 16.666 ms
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	/*
 	 * Redefinimos el método 'update' para que no borre el objeto en pantalla y
 	 * evitar el parpadeo. (non-Javadoc)
@@ -59,26 +81,6 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 		paint(doubleG);
 
 		g.drawImage(image, 0, 0, this);
-	}
-
-	@Override
-	public void run() {
-
-		while (true) {
-			b.update(this);
-			for (int i = 0; i < p.length; i++) {
-				p[i].update(this, b);
-			}
-			for (int i = 0; i < items.length; i++) {
-				items[i].update(this, b);
-			}
-			repaint();
-			try {
-				Thread.sleep(17); // 1000 milisegundos / 60FPS = 16.666 ms
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 
 	@Override

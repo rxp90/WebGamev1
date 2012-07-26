@@ -44,7 +44,7 @@ public class Item {
 	}
 
 	/**
-	 * Actualiza el estado de los objetos.
+	 * Actualiza el estado del objeto.
 	 * 
 	 * @param sp
 	 *            applet.

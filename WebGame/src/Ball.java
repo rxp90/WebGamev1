@@ -26,7 +26,7 @@ public class Ball {
 	private double xFriction = .9;
 
 	/**
-	 * Variables del juego.
+	 * Variables del juego: velocidad vertical constante.
 	 */
 	private double gameDy = -75;
 
