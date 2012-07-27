@@ -1,6 +1,5 @@
 package com.pfc.ball;
 
-import java.applet.Applet;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
@@ -11,9 +10,13 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Random;
 
+import javax.swing.JApplet;
+
 import com.pfc.remote.Api;
 
-public class StartingPoint extends Applet implements Runnable, KeyListener {
+public class JuegoPelota extends JApplet implements Runnable, KeyListener{
+	public JuegoPelota() {
+	}
 
 	/**
 	 * 
@@ -102,7 +105,6 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 
 	@Override
 	public void run() {
-		/*
 		// Actualiza el estado de todos los objeto y los pinta.
 		while (true) {
 
@@ -122,7 +124,6 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 				e.printStackTrace();
 			}
 		}
-		*/
 	}
 
 	public Double[] getAcceleration(String trama) {

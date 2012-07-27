@@ -11,7 +11,7 @@ public class Item {
 	/**
 	 * Applet.
 	 */
-	private StartingPoint sp;
+	private JuegoPelota jp;
 	/**
 	 * Velocidades.
 	 */
@@ -47,15 +47,15 @@ public class Item {
 	/**
 	 * Actualiza el estado del objeto.
 	 * 
-	 * @param sp
+	 * @param juegoPelota
 	 *            applet.
 	 * @param b
 	 *            objeto Ball del usuario.
 	 */
-	public void update(StartingPoint sp, Ball b) {
+	public void update(JuegoPelota juegoPelota, Ball b) {
 
-		if (this.sp == null) {
-			this.sp = sp;
+		if (this.jp == null) {
+			this.jp = juegoPelota;
 		}
 		if (!fallToFloor) {
 			x += dx; // Las plataformas se moverán a la derecha.
@@ -68,7 +68,7 @@ public class Item {
 		// por la derecha de forma aleatoria.
 		if (x < 0 - radius) {
 			Random r = new Random();
-			x = sp.getWidth() + 2000 + r.nextInt(300);
+			x = juegoPelota.getWidth() + 2000 + r.nextInt(300);
 		}
 	}
 
@@ -111,8 +111,8 @@ public class Item {
 	 * Hace que el objeto caiga al suelo.
 	 */
 	public void fallToFloor() {
-		if (x + dx > sp.getWidth() - radius - 1) {
-			x = sp.getWidth() - radius - 1; // -1 porque empieza en 0
+		if (x + dx > jp.getWidth() - radius - 1) {
+			x = jp.getWidth() - radius - 1; // -1 porque empieza en 0
 			dx = -dx;
 		} else if (x + dx < 0 + radius) {
 			x = 0 + radius;
@@ -122,7 +122,7 @@ public class Item {
 		}
 
 		// Si está en el suelo la velocidad del eje x sufrirá una fricción.
-		if (y == sp.getHeight() - radius - 1) {
+		if (y == jp.getHeight() - radius - 1) {
 			dx *= xFriction;
 			// Para detener el movimiento "residual" por el suelo.
 			if (Math.abs(dx) < .8) {
@@ -131,11 +131,11 @@ public class Item {
 			}
 		}
 
-		if (y > sp.getHeight() - radius - 1) { // Si la 'y' sobrepasa el
+		if (y > jp.getHeight() - radius - 1) { // Si la 'y' sobrepasa el
 												// suelo,
 												// la pelota rebotará contra
 												// él.
-			y = sp.getHeight() - radius - 1;
+			y = jp.getHeight() - radius - 1;
 			dy *= energyLoss;
 			dy = -dy;
 
