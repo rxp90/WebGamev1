@@ -1,14 +1,40 @@
 package com.pfc.ball;
+
 import java.applet.Applet;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.Random;
+
+import com.pfc.remote.Api;
 
 public class StartingPoint extends Applet implements Runnable, KeyListener {
 
-	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5022320510835636310L;
+	/**
+	 * Dirección del host.
+	 */
+	private String host = "localhost";
+	/**
+	 * Puerto del host.
+	 */
+	private int puerto = 1099;
+	/**
+	 * Registro del que se obtiene la interfaz remota.
+	 */
+	private static Registry registry;
+	/**
+	 * Interfaz remota.
+	 */
+	private Api remoteApi;
 
 	private Image image;
 	private Graphics doubleG;
@@ -19,6 +45,14 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 	@Override
 	public void init() {
 		setSize(800, 600);
+		try {
+			registry = LocateRegistry.getRegistry(host, puerto);
+			remoteApi = (Api) registry.lookup(Api.class.getSimpleName());
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		} catch (NotBoundException e) {
+			e.printStackTrace();
+		}
 		addKeyListener(this);
 	}
 
@@ -37,12 +71,40 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 
 		Thread thread = new Thread(this);
 		thread.start();
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				while (true) {
+					try {
+						String trama = remoteApi.leeLinea();
+						Double[] aceleraciones = getAcceleration(trama);
+						if (aceleraciones.length > 0 && aceleraciones[0] > 0) {
+							b.moveRight();
+						} else {
+							b.moveLeft();
+						}
+						// El Arduino proporciona datos cada 100 ms
+						Thread.sleep(100);
+					} catch (RemoteException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (NullPointerException e1) {
+						System.err.println("NULLPOINTER");
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		}).start();
 	}
 
 	@Override
 	public void run() {
 		// Actualiza el estado de todos los objeto y los pinta.
 		while (true) {
+
 			b.update(this);
 			for (int i = 0; i < p.length; i++) {
 				p[i].update(this, b);
@@ -59,6 +121,19 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public Double[] getAcceleration(String trama) {
+		Double[] aceleraciones = new Double[3];
+		if (trama != null && trama.length() > 0 && trama.startsWith("IT")
+				&& trama.endsWith("FT")) {
+			String datos = trama.substring(2, trama.length() - 2);
+			String[] ejes = datos.split(",");
+			aceleraciones[0] = Double.valueOf(ejes[0].substring(1));
+			aceleraciones[1] = Double.valueOf(ejes[1].substring(1));
+			aceleraciones[2] = Double.valueOf(ejes[2].substring(1));
+		}
+		return aceleraciones;
 	}
 
 	/*

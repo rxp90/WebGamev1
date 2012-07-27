@@ -148,6 +148,9 @@ public class ApiImpl extends UnicastRemoteObject implements Api, SerialPortEvent
 				inputString = strLine; // on the console
 			}
 		} catch (IOException e) {
+			// Con readLine() no maneja bien el TimeOut
+			// http://mailman.qbang.org/pipermail/rxtx/2008-February/9748098.html
+			// http://mailman.qbang.org/pipermail/rxtx/2009-April/9537609.html
 			// e.printStackTrace();
 		}
 
