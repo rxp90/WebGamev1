@@ -26,7 +26,7 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 	/**
 	 * Puerto del host.
 	 */
-	private int puerto = 1099;
+	private int puerto = 2000;
 	/**
 	 * Registro del que se obtiene la interfaz remota.
 	 */
@@ -45,6 +45,11 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 	@Override
 	public void init() {
 		setSize(800, 600);
+		addKeyListener(this);
+	}
+
+	@Override
+	public void start() {
 		try {
 			registry = LocateRegistry.getRegistry(host, puerto);
 			remoteApi = (Api) registry.lookup(Api.class.getSimpleName());
@@ -53,11 +58,6 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 		} catch (NotBoundException e) {
 			e.printStackTrace();
 		}
-		addKeyListener(this);
-	}
-
-	@Override
-	public void start() {
 		b = new Ball();
 		for (int i = 0; i < p.length; i++) {
 			Random r = new Random();
@@ -76,24 +76,27 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 			@Override
 			public void run() {
 				while (true) {
-					try {
-						String trama = remoteApi.leeLinea();
-						Double[] aceleraciones = getAcceleration(trama);
-						if (aceleraciones.length > 0 && aceleraciones[0] > 0) {
-							b.moveRight();
-						} else {
-							b.moveLeft();
+					if (remoteApi != null) {
+						try {
+							String trama = remoteApi.leeLinea();
+							Double[] aceleraciones = getAcceleration(trama);
+							if (aceleraciones.length > 0
+									&& aceleraciones[0] > 0) {
+								b.moveRight();
+							} else {
+								b.moveLeft();
+							}
+							// El Arduino proporciona datos cada 100 ms
+							Thread.sleep(100);
+						} catch (RemoteException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						} catch (NullPointerException e1) {
+							System.err.println("NULLPOINTER");
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
 						}
-						// El Arduino proporciona datos cada 100 ms
-						Thread.sleep(100);
-					} catch (RemoteException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (NullPointerException e1) {
-						System.err.println("NULLPOINTER");
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
 					}
 				}
 			}
@@ -192,6 +195,24 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 	@Override
 	public void keyTyped(KeyEvent e) {
 
+	}
+
+	public String getHost() {
+		return host;
+	}
+
+	public void setHost(String host) {
+		this.host = host;
+		start();
+	}
+
+	public int getPuerto() {
+		return puerto;
+	}
+
+	public void setPuerto(int puerto) {
+		this.puerto = puerto;
+		start();
 	}
 
 }
