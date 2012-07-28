@@ -1,42 +1,40 @@
-package com.pfc.ball;
+/*package com.pfc.ball;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Random;
 
+import javax.swing.BorderFactory;
 import javax.swing.JApplet;
+import javax.swing.JPanel;
+import javax.swing.border.BevelBorder;
 
 import com.pfc.remote.Api;
 
-public class JuegoPelota extends JApplet implements Runnable, KeyListener{
-	public JuegoPelota() {
-	}
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5022320510835636310L;
-	/**
+public class JuegoPelota extends JApplet implements Runnable {
+	private int tool = 1;
+	int currentX, currentY, oldX, oldY;
+	*//**
 	 * Dirección del host.
-	 */
+	 *//*
 	private String host = "localhost";
-	/**
+	*//**
 	 * Puerto del host.
-	 */
+	 *//*
 	private int puerto = 1099;
-	/**
+	*//**
 	 * Registro del que se obtiene la interfaz remota.
-	 */
+	 *//*
 	private static Registry registry;
-	/**
+	*//**
 	 * Interfaz remota.
-	 */
+	 *//*
 	private Api remoteApi;
 
 	private Image image;
@@ -45,9 +43,29 @@ public class JuegoPelota extends JApplet implements Runnable, KeyListener{
 	private Platform p[] = new Platform[7];
 	private Item items[] = new Item[10];
 
-	@Override
-	public void init() {
-		setSize(800, 600);
+	public JuegoPelota() {
+		initComponents();
+	}
+
+	public Double[] getAcceleration(String trama) {
+		Double[] aceleraciones = new Double[3];
+		if (trama != null && trama.length() > 0 && trama.startsWith("IT")
+				&& trama.endsWith("FT")) {
+			String datos = trama.substring(2, trama.length() - 2);
+			String[] ejes = datos.split(",");
+			aceleraciones[0] = Double.valueOf(ejes[0].substring(1));
+			aceleraciones[1] = Double.valueOf(ejes[1].substring(1));
+			aceleraciones[2] = Double.valueOf(ejes[2].substring(1));
+		}
+		return aceleraciones;
+	}
+
+	private void initComponents() {
+		// we want a custom Panel2, not a generic JPanel!
+		jPanel2 = new Panel2();
+
+		jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+		jPanel2.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 		try {
 			registry = LocateRegistry.getRegistry(host, puerto);
 			remoteApi = (Api) registry.lookup(Api.class.getSimpleName());
@@ -56,11 +74,6 @@ public class JuegoPelota extends JApplet implements Runnable, KeyListener{
 		} catch (NotBoundException e) {
 			e.printStackTrace();
 		}
-		addKeyListener(this);
-	}
-
-	@Override
-	public void start() {
 		b = new Ball();
 		for (int i = 0; i < p.length; i++) {
 			Random r = new Random();
@@ -101,11 +114,40 @@ public class JuegoPelota extends JApplet implements Runnable, KeyListener{
 				}
 			}
 		}).start();
+		// add the component to the frame to see it!
+		this.setContentPane(jPanel2);
+		// be nice to testers..
+		// this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		// pack();
+	}// </editor-fold>
+
+	// Variables declaration - do not modify
+	private JPanel jPanel2;
+
+	// End of variables declaration
+
+	// This class name is very confusing, since it is also used as the
+	// name of an attribute!
+	// class jPanel2 extends JPanel {
+	class Panel2 extends JPanel {
+
+		Panel2() {
+			// set a preferred size for the custom panel.
+			setPreferredSize(new Dimension(800, 600));
+		}
+
+		@Override
+		public void paintComponent(Graphics g) {
+			super.paintComponent(g);
+
+			g.drawString("BLAH", 20, 20);
+			g.drawRect(200, 200, 200, 200);
+		}
 	}
 
 	@Override
 	public void run() {
-		// Actualiza el estado de todos los objeto y los pinta.
+		new JuegoPelota().setVisible(true);
 		while (true) {
 
 			b.update(this);
@@ -115,9 +157,7 @@ public class JuegoPelota extends JApplet implements Runnable, KeyListener{
 			for (int i = 0; i < items.length; i++) {
 				items[i].update(this, b);
 			}
-
-			repaint();
-
+			paintComponents(getGraphics());
 			try {
 				Thread.sleep(17); // 1000 milisegundos / 60FPS = 16.666 ms
 			} catch (InterruptedException e) {
@@ -126,73 +166,5 @@ public class JuegoPelota extends JApplet implements Runnable, KeyListener{
 		}
 	}
 
-	public Double[] getAcceleration(String trama) {
-		Double[] aceleraciones = new Double[3];
-		if (trama != null && trama.length() > 0 && trama.startsWith("IT")
-				&& trama.endsWith("FT")) {
-			String datos = trama.substring(2, trama.length() - 2);
-			String[] ejes = datos.split(",");
-			aceleraciones[0] = Double.valueOf(ejes[0].substring(1));
-			aceleraciones[1] = Double.valueOf(ejes[1].substring(1));
-			aceleraciones[2] = Double.valueOf(ejes[2].substring(1));
-		}
-		return aceleraciones;
-	}
-
-	/*
-	 * Redefinimos el método 'update' para que no borre el objeto en pantalla y
-	 * evitar el parpadeo. (non-Javadoc)
-	 * 
-	 * @see java.awt.Container#update(java.awt.Graphics)
-	 */
-	@Override
-	public void update(Graphics g) {
-		// Double buffering.
-		if (image == null) {
-			image = createImage(this.getSize().width, this.getSize().height);
-			doubleG = image.getGraphics();
-		}
-
-		doubleG.setColor(getBackground());
-		doubleG.fillRect(0, 0, this.getSize().width, this.getSize().height);
-
-		doubleG.setColor(getForeground());
-		paint(doubleG);
-
-		g.drawImage(image, 0, 0, this);
-	}
-
-	@Override
-	public void paint(Graphics g) {
-		b.paint(g);
-		for (int i = 0; i < p.length; i++) {
-			p[i].paint(g);
-		}
-		for (int i = 0; i < items.length; i++) {
-			items[i].paint(g);
-		}
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		switch (e.getKeyCode()) {
-		case KeyEvent.VK_LEFT:
-			b.moveLeft();
-			break;
-		case KeyEvent.VK_RIGHT:
-			b.moveRight();
-			break;
-		}
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-
-	}
-
-	@Override
-	public void keyTyped(KeyEvent e) {
-
-	}
-
 }
+*/

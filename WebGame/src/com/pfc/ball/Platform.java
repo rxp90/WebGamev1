@@ -43,12 +43,12 @@ public class Platform {
 	/**
 	 * Actualiza el estado del objeto.
 	 * 
-	 * @param juegoPelota
+	 * @param StartingPoint
 	 *            applet.
 	 * @param b
 	 *            objeto Ball del usuario.
 	 */
-	public void update(JuegoPelota juegoPelota, Ball b) {
+	public void update(StartingPoint StartingPoint, Ball b) {
 
 		x += dx; // Las plataformas se moverán a la izquierda.
 
@@ -58,8 +58,8 @@ public class Platform {
 		// por la derecha de forma aleatoria.
 		if (x < 0 - width) {
 			Random r = new Random();
-			y = juegoPelota.getHeight() - height - r.nextInt(400);
-			x = juegoPelota.getWidth() + r.nextInt(300);
+			y = StartingPoint.getHeight() - height - r.nextInt(400);
+			x = StartingPoint.getWidth() + r.nextInt(300);
 		}
 	}
 

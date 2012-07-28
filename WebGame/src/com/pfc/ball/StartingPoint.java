@@ -102,7 +102,7 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 
 	@Override
 	public void run() {
-		/*
+
 		// Actualiza el estado de todos los objeto y los pinta.
 		while (true) {
 
@@ -122,7 +122,7 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 				e.printStackTrace();
 			}
 		}
-		*/
+
 	}
 
 	public Double[] getAcceleration(String trama) {

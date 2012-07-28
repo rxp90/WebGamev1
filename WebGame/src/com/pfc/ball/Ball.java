@@ -53,13 +53,13 @@ public class Ball {
 	/**
 	 * Actualiza el estado del objeto.
 	 * 
-	 * @param juegoPelota
+	 * @param StartingPoint
 	 *            applet.
 	 */
-	public void update(JuegoPelota juegoPelota) {
+	public void update(StartingPoint sp) {
 
-		if (x + dx > juegoPelota.getWidth() - radius - 1) { // Rebote con lado derecho.
-			x = juegoPelota.getWidth() - radius - 1; // -1 porque empieza en 0
+		if (x + dx > sp.getWidth() - radius - 1) { // Rebote con lado derecho.
+			x = sp.getWidth() - radius - 1; // -1 porque empieza en 0
 			dx = -dx;
 		} else if (x + dx < 0 + radius) {// Rebote con lado izquierdo
 			x = 0 + radius;
@@ -68,9 +68,9 @@ public class Ball {
 			x += dx;
 		}
 
-		if (y > juegoPelota.getHeight() - radius - 1) { // Si la 'y' sobrepasa el suelo,
+		if (y > sp.getHeight() - radius - 1) { // Si la 'y' sobrepasa el suelo,
 												// la pelota rebotará contra él.
-			y = juegoPelota.getHeight() - radius - 1;
+			y = sp.getHeight() - radius - 1;
 			// dy *= energyLoss;
 			// dy = -dy;
 			dy = gameDy;
@@ -82,7 +82,7 @@ public class Ball {
 		}
 
 		// Si está en el suelo la velocidad del eje x sufrirá una fricción.
-		if (y == juegoPelota.getHeight() - radius - 1) {
+		if (y == sp.getHeight() - radius - 1) {
 			dx *= xFriction;
 			// Para detener el movimiento "residual" por el suelo.
 			if (Math.abs(dx) < .8) {

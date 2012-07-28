@@ -11,7 +11,7 @@ public class Item {
 	/**
 	 * Applet.
 	 */
-	private JuegoPelota jp;
+	private StartingPoint jp;
 	/**
 	 * Velocidades.
 	 */
@@ -47,15 +47,15 @@ public class Item {
 	/**
 	 * Actualiza el estado del objeto.
 	 * 
-	 * @param juegoPelota
+	 * @param StartingPoint
 	 *            applet.
 	 * @param b
 	 *            objeto Ball del usuario.
 	 */
-	public void update(JuegoPelota juegoPelota, Ball b) {
+	public void update(StartingPoint startingPoint, Ball b) {
 
 		if (this.jp == null) {
-			this.jp = juegoPelota;
+			this.jp = startingPoint;
 		}
 		if (!fallToFloor) {
 			x += dx; // Las plataformas se moverán a la derecha.
@@ -68,7 +68,7 @@ public class Item {
 		// por la derecha de forma aleatoria.
 		if (x < 0 - radius) {
 			Random r = new Random();
-			x = juegoPelota.getWidth() + 2000 + r.nextInt(300);
+			x = startingPoint.getWidth() + 2000 + r.nextInt(300);
 		}
 	}
 
