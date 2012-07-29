@@ -9,6 +9,8 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Random;
 
 import com.pfc.remote.Api;
@@ -50,14 +52,9 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 
 	@Override
 	public void start() {
-		try {
-			registry = LocateRegistry.getRegistry(host, puerto);
-			remoteApi = (Api) registry.lookup(Api.class.getSimpleName());
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		} catch (NotBoundException e) {
-			e.printStackTrace();
-		}
+
+		conectaServidor();
+		
 		b = new Ball();
 		for (int i = 0; i < p.length; i++) {
 			Random r = new Random();
@@ -71,8 +68,8 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 
 		Thread thread = new Thread(this);
 		thread.start();
+		
 		new Thread(new Runnable() {
-
 			@Override
 			public void run() {
 				while (true) {
@@ -101,6 +98,24 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 				}
 			}
 		}).start();
+	}
+
+	public void conectaServidor() {
+		AccessController.doPrivileged(new PrivilegedAction<Object>() {
+			@Override
+			public Object run() {
+				try {
+					registry = LocateRegistry.getRegistry(host, puerto);
+					remoteApi = (Api) registry.lookup(Api.class.getSimpleName());
+				} catch (final RemoteException e) {
+					e.printStackTrace();
+				} catch (final NotBoundException e) {
+					e.printStackTrace();
+				}
+				return null;
+			}
+		});
+
 	}
 
 	@Override
@@ -203,7 +218,7 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 
 	public void setHost(String host) {
 		this.host = host;
-		start();
+		conectaServidor();
 	}
 
 	public int getPuerto() {
@@ -212,7 +227,7 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 
 	public void setPuerto(int puerto) {
 		this.puerto = puerto;
-		start();
+		conectaServidor();
 	}
 
 }
