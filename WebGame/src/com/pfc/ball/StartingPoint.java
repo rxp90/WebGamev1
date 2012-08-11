@@ -30,7 +30,7 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 	/**
 	 * Puerto del host.
 	 */
-	private int puerto = 1099;
+	private int puerto = 2000;
 	/**
 	 * Registro del que se obtiene la interfaz remota.
 	 */
@@ -54,9 +54,7 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 
 	@Override
 	public void start() {
-
 		conectaServidor();
-		
 		b = new Ball();
 		for (int i = 0; i < p.length; i++) {
 			Random r = new Random();
@@ -70,13 +68,14 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 
 		Thread thread = new Thread(this);
 		thread.start();
-		
+
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
 				while (true) {
 					if (remoteApi != null) {
 						try {
+							System.out.println("Recibo trama");
 							String trama = remoteApi.leeLinea();
 							Double[] aceleraciones = getAcceleration(trama);
 							if (aceleraciones.length > 0
@@ -88,31 +87,42 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 							// El Arduino proporciona datos cada 100 ms
 							Thread.sleep(100);
 						} catch (RemoteException e1) {
-							Logger.getLogger(StartingPoint.class.getName()).log(Level.WARNING, "Error al conectarse al servidor: " + e1.getMessage());
+							Logger.getLogger(StartingPoint.class.getName())
+									.log(Level.WARNING,
+											"Error al conectarse al servidor: "
+													+ e1.getMessage());
 						} catch (NullPointerException e1) {
-							Logger.getLogger(StartingPoint.class.getName()).log(Level.WARNING, "NPE: " + e1.getMessage());
+							Logger.getLogger(StartingPoint.class.getName())
+									.log(Level.WARNING,
+											"NPE: " + e1.getMessage());
 						} catch (InterruptedException e) {
-							Logger.getLogger(StartingPoint.class.getName()).log(Level.WARNING, "Error en Thread.sleep(): " + e.getMessage());
+							Logger.getLogger(StartingPoint.class.getName())
+									.log(Level.WARNING,
+											"Error en Thread.sleep(): "
+													+ e.getMessage());
 						}
-					}
+					} 
 				}
 			}
 		}).start();
+
 	}
 
-	public void conectaServidor() {
-		
-		registry = null;
-		remoteApi = null;
-		
+	private void conectaServidor() {
 		AccessController.doPrivileged(new PrivilegedAction<Object>() {
 			@Override
 			public Object run() {
 				try {
 					registry = LocateRegistry.getRegistry(host, puerto);
-					remoteApi = (ControladorMando) registry.lookup(ControladorMando.class.getSimpleName());
+					remoteApi = (ControladorMando) registry
+							.lookup(ControladorMando.class.getSimpleName());
 				} catch (final RemoteException e) {
-					Logger.getLogger(StartingPoint.class.getName()).log(Level.WARNING, "Error al conectarse al servidor: " + e.getMessage());
+					registry = null;
+					remoteApi = null;
+					Logger.getLogger(StartingPoint.class.getName()).log(
+							Level.WARNING,
+							"Error al conectarse al servidor: "
+									+ e.getMessage());
 				} catch (final NotBoundException e) {
 					e.printStackTrace();
 				}
@@ -234,7 +244,8 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 		conectaServidor();
 	}
 
-	public boolean isConnected(){
-		return registry!=null && remoteApi!=null; 
+	public boolean isConnected() {
+		return registry != null && remoteApi != null;
 	}
+	
 }
