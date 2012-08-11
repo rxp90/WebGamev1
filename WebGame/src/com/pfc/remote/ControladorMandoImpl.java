@@ -15,7 +15,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
 
-public class ApiImpl extends UnicastRemoteObject implements Api, SerialPortEventListener {
+public class ControladorMandoImpl extends UnicastRemoteObject implements ControladorMando, SerialPortEventListener {
 
 	/**
 	 * Puerto serie.
@@ -56,7 +56,7 @@ public class ApiImpl extends UnicastRemoteObject implements Api, SerialPortEvent
 	 * 
 	 * @throws RemoteException
 	 */
-	protected ApiImpl() throws RemoteException {
+	protected ControladorMandoImpl() throws RemoteException {
 		open();
 	}
 

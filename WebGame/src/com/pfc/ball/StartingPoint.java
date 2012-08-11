@@ -12,8 +12,10 @@ import java.rmi.registry.Registry;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import com.pfc.remote.Api;
+import com.pfc.remote.ControladorMando;
 
 public class StartingPoint extends Applet implements Runnable, KeyListener {
 
@@ -28,7 +30,7 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 	/**
 	 * Puerto del host.
 	 */
-	private int puerto = 2000;
+	private int puerto = 1099;
 	/**
 	 * Registro del que se obtiene la interfaz remota.
 	 */
@@ -36,7 +38,7 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 	/**
 	 * Interfaz remota.
 	 */
-	private Api remoteApi;
+	private ControladorMando remoteApi;
 
 	private Image image;
 	private Graphics doubleG;
@@ -46,7 +48,7 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 
 	@Override
 	public void init() {
-		setSize(800, 600);
+		setSize(600, 400);
 		addKeyListener(this);
 	}
 
@@ -86,13 +88,11 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 							// El Arduino proporciona datos cada 100 ms
 							Thread.sleep(100);
 						} catch (RemoteException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
+							Logger.getLogger(StartingPoint.class.getName()).log(Level.WARNING, "Error al conectarse al servidor: " + e1.getMessage());
 						} catch (NullPointerException e1) {
-							System.err.println("NULLPOINTER");
+							Logger.getLogger(StartingPoint.class.getName()).log(Level.WARNING, "NPE: " + e1.getMessage());
 						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							Logger.getLogger(StartingPoint.class.getName()).log(Level.WARNING, "Error en Thread.sleep(): " + e.getMessage());
 						}
 					}
 				}
@@ -101,14 +101,18 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 	}
 
 	public void conectaServidor() {
+		
+		registry = null;
+		remoteApi = null;
+		
 		AccessController.doPrivileged(new PrivilegedAction<Object>() {
 			@Override
 			public Object run() {
 				try {
 					registry = LocateRegistry.getRegistry(host, puerto);
-					remoteApi = (Api) registry.lookup(Api.class.getSimpleName());
+					remoteApi = (ControladorMando) registry.lookup(ControladorMando.class.getSimpleName());
 				} catch (final RemoteException e) {
-					e.printStackTrace();
+					Logger.getLogger(StartingPoint.class.getName()).log(Level.WARNING, "Error al conectarse al servidor: " + e.getMessage());
 				} catch (final NotBoundException e) {
 					e.printStackTrace();
 				}
@@ -230,4 +234,7 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 		conectaServidor();
 	}
 
+	public boolean isConnected(){
+		return registry!=null && remoteApi!=null; 
+	}
 }

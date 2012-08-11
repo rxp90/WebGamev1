@@ -4,7 +4,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.Observer;
 
-public interface Api extends Remote {
+public interface ControladorMando extends Remote {
 
 	public String apagarAcelerometro() throws RemoteException;
 
