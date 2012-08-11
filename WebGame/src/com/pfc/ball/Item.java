@@ -39,7 +39,7 @@ public class Item {
 	public Item(int x) {
 		this.x = x;
 		Random r = new Random();
-		y = r.nextInt(400) + radius;
+		y = r.nextInt(200) + radius;
 		radius = 10;
 		dx = -2;
 	}

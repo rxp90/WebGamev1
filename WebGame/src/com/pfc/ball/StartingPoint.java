@@ -59,7 +59,7 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 		for (int i = 0; i < p.length; i++) {
 			Random r = new Random();
 			p[i] = new Platform(getWidth() + 200 * i, getHeight() - 40
-					- r.nextInt(400));
+					- r.nextInt(200));
 		}
 
 		for (int i = 0; i < items.length; i++) {
@@ -75,7 +75,6 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 				while (true) {
 					if (remoteApi != null) {
 						try {
-							System.out.println("Recibo trama");
 							String trama = remoteApi.leeLinea();
 							Double[] aceleraciones = getAcceleration(trama);
 							if (aceleraciones.length > 0
@@ -157,7 +156,7 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 
 	}
 
-	public Double[] getAcceleration(String trama) {
+	private Double[] getAcceleration(String trama) {
 		Double[] aceleraciones = new Double[3];
 		if (trama != null && trama.length() > 0 && trama.startsWith("IT")
 				&& trama.endsWith("FT")) {
