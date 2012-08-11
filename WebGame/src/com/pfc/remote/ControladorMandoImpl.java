@@ -25,13 +25,13 @@ public class ControladorMandoImpl extends UnicastRemoteObject implements Control
 	/**
 	 * Puertos que van a usarse.
 	 */
-	private static final String PORT_NAMES[] = { "/dev/tty.usbserial-A9007UX1", // Mac
+	private static String port_names[] = { "/dev/tty.usbserial-A9007UX1", // Mac
 																				// OS
 																				// X
 			"/dev/ttyUSB0", // Linux
 			"COM7", // Windows
 	};
-
+	
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -57,7 +57,7 @@ public class ControladorMandoImpl extends UnicastRemoteObject implements Control
 	 * @throws RemoteException
 	 */
 	protected ControladorMandoImpl() throws RemoteException {
-		open();
+		//open();
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class ControladorMandoImpl extends UnicastRemoteObject implements Control
 		while (portEnum.hasMoreElements()) {
 			CommPortIdentifier currPortId = (CommPortIdentifier) portEnum
 					.nextElement();
-			for (String portName : PORT_NAMES) {
+			for (String portName : port_names) {
 				if (currPortId.getName().equals(portName)) {
 					portId = currPortId;
 					break;
@@ -81,7 +81,7 @@ public class ControladorMandoImpl extends UnicastRemoteObject implements Control
 		}
 
 		if (portId == null) {
-			System.out.println("No se pudo encontrar el puerto COM");
+			System.out.println("No se pudo encontrar el puerto COM. Reinicie el servidor indicando un puerto válido.");
 			return;
 		}
 
@@ -189,4 +189,12 @@ public class ControladorMandoImpl extends UnicastRemoteObject implements Control
 		return "Encendido " + leeLinea();
 	}
 
+	public void setPorts(String macOSX, String linux, String windows) throws RemoteException {
+		
+		port_names[0] = macOSX;
+		port_names[1] = linux;
+		port_names[2] = windows;
+		
+		open();
+	}
 }

@@ -12,4 +12,5 @@ public interface ControladorMando extends Remote {
 
 	public String leeLinea() throws RemoteException;
 
+	public void setPorts(String macOSX, String linux, String windows) throws RemoteException;
 }
