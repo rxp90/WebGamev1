@@ -236,31 +236,6 @@ public class MoviePlayer extends Application {
 
 	}
 
-	/*
-	 * // Imprimo los valores Serial.print("IT"); // DatosTrama de
-	 * direccionamiento de XBee Serial.print("MY"); Serial.print(direccionNodo);
-	 * Serial.print(","); Serial.print("ID"); Serial.print(idRed);
-	 * Serial.print(","); Serial.print("CH"); Serial.print(canal);
-	 * Serial.print(","); // DatosTrama de sensores Serial.print("x");
-	 * Serial.print(x); Serial.print(","); Serial.print("y"); Serial.print(y);
-	 * Serial.print(","); Serial.print("z"); Serial.print(z);
-	 * Serial.println("FT");
-	 */
-	@Deprecated
-	private Double[] getAcceleration(String trama) {
-		Double[] aceleraciones = new Double[3];
-		if (trama != null && trama.length() > 0 && trama.startsWith("IT")
-				&& trama.endsWith("FT")) {
-			String datos = trama.substring(2, trama.length() - 2);
-			String[] ejes = datos.split(",");
-			aceleraciones[0] = Double.valueOf(ejes[4].substring(1));
-			aceleraciones[1] = Double.valueOf(ejes[5].substring(1));
-			aceleraciones[2] = Double.valueOf(ejes[6].substring(1));
-		}
-		return aceleraciones;
-	}
-
-
 	/**
 	 * The main() method is ignored in correctly deployed JavaFX application.
 	 * main() serves only as fallback in case the application can not be

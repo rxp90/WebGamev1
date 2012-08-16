@@ -15,6 +15,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.pfc.datostrama.DatosTrama;
 import com.pfc.remote.ControladorMando;
 
 public class StartingPoint extends Applet implements Runnable, KeyListener {
@@ -72,16 +73,22 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
+
+				Double min = 0.1;
+
 				while (true) {
 					if (remoteApi != null) {
 						try {
 							String trama = remoteApi.leeLinea();
-							Double[] aceleraciones = getAcceleration(trama);
-							if (aceleraciones.length > 0
-									&& aceleraciones[0] > 0) {
-								b.moveRight();
-							} else {
-								b.moveLeft();
+							DatosTrama datosTrama = DatosTrama.getData(trama);
+							if (datosTrama != null) {
+								Double aceleracionX = datosTrama
+										.getAceleraciones().getX();
+								if (aceleracionX > min) {
+									b.moveRight();
+								} else if (aceleracionX < -min) {
+									b.moveLeft();
+								}
 							}
 							// El Arduino proporciona datos cada 100 ms
 							Thread.sleep(100);
@@ -100,7 +107,7 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 											"Error en Thread.sleep(): "
 													+ e.getMessage());
 						}
-					} 
+					}
 				}
 			}
 		}).start();
@@ -154,19 +161,6 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 			}
 		}
 
-	}
-
-	private Double[] getAcceleration(String trama) {
-		Double[] aceleraciones = new Double[3];
-		if (trama != null && trama.length() > 0 && trama.startsWith("IT")
-				&& trama.endsWith("FT")) {
-			String datos = trama.substring(2, trama.length() - 2);
-			String[] ejes = datos.split(",");
-			aceleraciones[0] = Double.valueOf(ejes[0].substring(1));
-			aceleraciones[1] = Double.valueOf(ejes[1].substring(1));
-			aceleraciones[2] = Double.valueOf(ejes[2].substring(1));
-		}
-		return aceleraciones;
 	}
 
 	/*
@@ -246,5 +240,5 @@ public class StartingPoint extends Applet implements Runnable, KeyListener {
 	public boolean isConnected() {
 		return registry != null && remoteApi != null;
 	}
-	
+
 }
